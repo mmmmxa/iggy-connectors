@@ -252,3 +252,4 @@ jobs:
             echo "" >> "$GITHUB_STEP_SUMMARY"
             echo "✅ **CI Passed** - All checks completed successfully!" >> "$GITHUB_STEP_SUMMARY"
           fi
+# fork workflow registration
