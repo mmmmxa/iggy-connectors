@@ -431,3 +431,4 @@ jobs:
             Tag: ${{ steps.ver.outputs.tag }}
             Commit: ${{ needs.validate.outputs.commit }}
             Released by: GitHub Actions (workflow ${{ github.run_id }})
+# publish workflow registration
