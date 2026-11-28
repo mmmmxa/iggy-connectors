@@ -27,7 +27,6 @@ set -euo pipefail
 # from `cargo metadata` so a newly added connector is picked up automatically
 # by every consumer:
 #
-#   - .github/workflows/_build_rust_artifacts.yml  (edge tarball plugin list)
 #   - runtime/Dockerfile           (fat image build + bundle)
 #   - .github/actions/utils/validate-third-party-licenses  (license gate)
 #
@@ -46,9 +45,6 @@ set -euo pipefail
 #
 # Output modes (one plugin per line unless noted):
 #   --names            cdylib target names, i.e. the <name> in lib<name>.so
-#   --comma-names      cdylib target names, one CSV line
-#   --packages         package names, i.e. what cargo -p takes
-#   --comma-packages   package names, one CSV line
 #   --package-flags    cargo -p flags, one line   (-p iggy_connector_... ...)
 #   --manifests        repo-relative Cargo.toml paths
 #   --manifest-flags   --manifest flags, one line (for third-party-licenses.sh)
@@ -98,15 +94,6 @@ case "$MODE" in
     --names)
         echo "$NAMES"
         ;;
-    --comma-names)
-        paste -sd, - <<<"$NAMES"
-        ;;
-    --packages)
-        echo "$PACKAGES"
-        ;;
-    --comma-packages)
-        paste -sd, - <<<"$PACKAGES"
-        ;;
     --package-flags)
         mapfile -t packages_arr <<<"$PACKAGES"
         printf '%s\n' "${packages_arr[@]/#/-p }" | paste -sd' ' -
@@ -120,7 +107,7 @@ case "$MODE" in
         ;;
     *)
         echo "connector-plugins: unknown mode '$MODE'" >&2
-        echo "usage: $0 [--names|--comma-names|--packages|--comma-packages|--package-flags|--manifests|--manifest-flags]" >&2
+        echo "usage: $0 [--names|--package-flags|--manifests|--manifest-flags]" >&2
         exit 2
         ;;
 esac

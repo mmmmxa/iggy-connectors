@@ -26,9 +26,10 @@ components:
     version_regex: '(?m)^\s*version\s*=\s*"([^"]+)"'
 
   # ── DockerHub images ───────────────────────────────────────────────────────
-  # Post-merge refreshes each image's :edge tag only when its row in
-  # .github/config/edge-image-variants.json selects it. Every dockerhub
-  # component needs a row that lists its dockerfile. The common checks run
+  # Post-merge refreshes an image's :edge tag only when its row in
+  # .github/config/edge-image-variants.json selects it, and never for a
+  # release_only image. Every dockerhub component needs a row that lists its
+  # dockerfile. The common checks run
   # scripts/ci/edge-image-catalog.sh --check to enforce that.
   rust-connectors:
     tag_pattern: "^connectors-([0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?)$"
@@ -45,13 +46,14 @@ components:
     # runtime-fat stage) bundles every connector plugin and is the default;
     # -slim (runtime stage) ships the runtime binary only. Each flavor keeps
     # its own per-arch digest set and manifest tags. Components without a
-    # flavors list build their single default stage.
+    # flavors list build their single default stage. Manifests are pushed in
+    # list order, so slim comes first and latest moves only after it succeeded.
     flavors:
+      - name: slim
+        suffix: "-slim"
+        stage: runtime
       - name: fat
         suffix: ""
         stage: runtime-fat
         # The LTO plugin links took ~39 min on amd64 and the plugin set grows.
         timeout_minutes: 90
-      - name: slim
-        suffix: "-slim"
-        stage: runtime

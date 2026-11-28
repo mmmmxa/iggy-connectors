@@ -39,9 +39,6 @@ RUN cargo chef prepare --recipe-path recipe.json && \
 # the cross toolchain, cargo-zigbuild, cargo-about, and the chef recipe.
 #
 FROM --platform=$BUILDPLATFORM chef AS toolchain
-ARG IGGY_CI_BUILD
-ENV IGGY_CI_BUILD=${IGGY_CI_BUILD}
-
 # The base image tag and rust-toolchain.toml agree only while the pinned
 # channel is an x.y.z with z > 0: scripts/ci/sync-rustc-version.sh rewrites an
 # x.y.0 channel to the floating x.y tag, which then resolves to whatever patch

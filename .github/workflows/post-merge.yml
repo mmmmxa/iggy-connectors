@@ -15,8 +15,9 @@
 # specific language governing permissions and limitations
 # under the License.
 
-# Auto-publish: refreshes apache/iggy-connect:edge when the image inputs
-# change, and publishes an untagged edge version of iggy_connector_sdk.
+# Auto-publish: refreshes the :edge tag of a Docker image that is not
+# release_only when its inputs change (apache/iggy-connect is release_only),
+# and publishes an untagged edge version of iggy_connector_sdk.
 # Runs on every push to master.
 
 name: Post-merge

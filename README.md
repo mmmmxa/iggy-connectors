@@ -123,7 +123,7 @@ The image is published to Docker Hub as [`apache/iggy-connect`](https://hub.dock
 > [!NOTE]
 > Up to and including the last release before flavors, `latest` and `x.y.z` were the runtime-only image. From the first release that ships flavors, they are the full image, and the runtime-only image is `latest-slim` or `x.y.z-slim`.
 >
-> Both flavors are built only by a manual release. The `edge` tag is no longer refreshed on merge, and there is no `edge-slim`.
+> Both flavors are built only by a manual release. The `edge` tag is no longer refreshed on merge.
 
 The default image places every connector plugin in `/usr/local/lib`, which is on the runtime plugin search path. A connector configuration loads a bundled plugin by its library file name, with no directory and no extension:
 
@@ -134,7 +134,7 @@ name = "Stdout sink"
 path = "libiggy_connector_stdout_sink"
 ```
 
-Run the image with a configuration mounted in:
+Run the image with a configuration mounted in. `config.toml` must set `[connectors].config_dir` to a mounted directory of connector configurations, and `[iggy].address` to an Iggy server that the container can reach, because the default `localhost:8090` points at the container itself. The [runtime README](runtime/README.md) describes both settings.
 
 ```bash
 docker run --rm \
