@@ -15,8 +15,9 @@
 # specific language governing permissions and limitations
 # under the License.
 
-# Auto-publish: refreshes apache/iggy-connect:edge when the image inputs
-# change, and publishes an untagged edge version of iggy_connector_sdk.
+# Auto-publish: refreshes the :edge tag of a Docker image that is not
+# release_only when its inputs change (apache/iggy-connect is release_only),
+# and publishes an untagged edge version of iggy_connector_sdk.
 # Runs on every push to master.
 
 name: Post-merge
@@ -102,6 +103,11 @@ jobs:
             echo "::warning::Cargo-Rail edge image matrix is invalid; refreshing all edge images"
             DOCKER_COMPONENTS="$ALL_DOCKER_COMPONENTS"
           fi
+
+          # release_only images are published by hand, never on a merge.
+          DOCKER_COMPONENTS=$(jq -Rr --argjson configured "$COMPONENTS_JSON" '
+            split(",") | map(select(length > 0 and (($configured[.].release_only // false) | not))) | join(",")
+          ' <<< "$DOCKER_COMPONENTS")
 
           echo "docker_components=$DOCKER_COMPONENTS" >> "$GITHUB_OUTPUT"
           echo "Docker components to refresh: ${DOCKER_COMPONENTS:-<none>}"
